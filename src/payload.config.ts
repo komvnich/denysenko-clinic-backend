@@ -16,7 +16,7 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
-  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'https://denysenko.clinic',
+  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'https://denysenko-clinic-backend.vercel.app',
   admin: {
     user: Users.slug,
     importMap: {
@@ -42,8 +42,8 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  cors: ['http://localhost:3000'],
-  csrf: ['http://localhost:3000'],
+  cors: ['https://denysenko.clinic'],
+  csrf: ['https://denysenko.clinic'],
   sharp,
   plugins: [
     payloadCloudPlugin(),
