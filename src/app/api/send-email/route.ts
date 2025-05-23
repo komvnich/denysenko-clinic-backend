@@ -1,6 +1,23 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
+// Helper function to add CORS headers
+function corsResponse(data: any, status = 200) {
+  return NextResponse.json(data, {
+    status,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+}
+
+// Handle OPTIONS request for CORS preflight
+export async function OPTIONS() {
+  return corsResponse({});
+}
+
 export async function POST(request: Request) {
   try {
     const data = await request.json();
@@ -8,10 +25,7 @@ export async function POST(request: Request) {
 
     // Validate required fields
     if (!to || !subject || !html || !smtpConfig) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
+      return corsResponse({ error: "Missing required fields" }, 400);
     }
 
     // Create a nodemailer transporter
@@ -33,12 +47,9 @@ export async function POST(request: Request) {
       html,
     });
 
-    return NextResponse.json({ success: true });
+    return corsResponse({ success: true });
   } catch (error) {
     console.error("Error sending email:", error);
-    return NextResponse.json(
-      { error: "Failed to send email" },
-      { status: 500 }
-    );
+    return corsResponse({ error: "Failed to send email" }, 500);
   }
 }
